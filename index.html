@@ -75,6 +75,7 @@
         pokemonName.innerHTML = data.name;
         pokemonNumber.innerHTML = data.id;
         pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
+        pokemonTypes.innerHTML= data.types[0].type.name
         input.value = '';
         searchPokemon = data.id;
       } else {
