@@ -92,3 +92,17 @@ main {
   box-shadow: inset -4px 4px 0 #105abb;
   font-size: 0.9rem;
 }
+.pokemon_info {
+  position: absolute;
+  top: 60%;
+  left: 100%;
+  transform: translateX(-10%);
+  text-align: left;
+  font-size: clamp(8px, 1.8vw, 14px);
+  color: #00318b;
+  font-weight: 600;
+}
+
+.pokemon_info p {
+  margin: 2px 0;
+}

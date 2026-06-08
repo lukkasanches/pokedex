@@ -23,8 +23,13 @@
     <h1 class="pokemon__data">
       <span class="pokemon__number"></span> -
       <span class="pokemon__name"></span>
-      <span class="pokemon_types"></span>
     </h1>
+
+    <div class="pokemon_info">
+      <p><strong>Tipo:</strong> <span class="pokemon_types"></span></p>
+      <p><strong>Altura:</strong> <span class="pokemon_height"></span></p>
+      <p><strong>Peso:</strong> <span class="pokemon_weight"></span></p>
+    </div>
 
     <form class="form">
       <input type="search" class="input__search" placeholder="Nome ou número!" required />
@@ -45,6 +50,8 @@
     const pokemonNumber = document.querySelector('.pokemon__number');
     const pokemonImage = document.querySelector('.pokemon__image');
     const pokemonTypes = document.querySelector('.pokemon_types');
+    const pokemonHeight = document.querySelector('.pokemon_height');
+    const pokemonWeight = document.querySelector('.pokemon_weight');
 
     const form = document.querySelector('.form');
     const input = document.querySelector('.input__search');
@@ -75,13 +82,19 @@
         pokemonName.innerHTML = data.name;
         pokemonNumber.innerHTML = data.id;
         pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
-        pokemonTypes.innerHTML= data.types[0].type.name
-        input.value = '';
+        pokemonTypes.innerHTML =
+          data.types.map(tipo => tipo.type.name).join(', ');
+
+        pokemonHeight.innerHTML = data.height;
+        pokemonWeight.innerHTML = data.weight;        input.value = '';
         searchPokemon = data.id;
       } else {
         pokemonImage.style.display = 'none';
-        pokemonName.innerHTML = 'Não encontrado :c';
+        pokemonName.innerHTML = 'Pokémon não encontrado :c';
         pokemonNumber.innerHTML = '';
+        pokemonTypes.innerHTML = '';
+        pokemonHeight.innerHTML = '';
+        pokemonWeight.innerHTML = '';        pokemonNumber.innerHTML = '';
       }
     }
 
