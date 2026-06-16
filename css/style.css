@@ -20,45 +20,48 @@ main {
   position: relative;
 }
 
+/* Corrigido o seletor para casar com a imagem do HTML */
 .pokedexm {
   width: 100%;
   max-width: 425px;
+  display: block;
 }
 
-/* --- Ajustado para dar espaço na lateral --- */
+/* Imagem posicionada na área do visor esquerdo */
 .pokemon__image {
   position: absolute;
   bottom: 55%;
-  left: 46%; 
+  left: 38%; 
   transform: translate(-50%, 20%);
   height: 18%;
+  z-index: 2;
 }
 
-/* --- Posicionado logo ao lado direito da imagem --- */
+/* Informações extras perfeitamente posicionadas ao lado direito da imagem */
 .pokemon_info {
   position: absolute;
-  top: 32%;         /* Alinha verticalmente com a imagem */
-  left: 200%;        /* Joga o texto para a direita da imagem */
+  top: 32%;         
+  left: 58%;        
   text-align: left;
-  font-size: clamp(10px);
+  font-size: clamp(10px, 3.5vw, 13px);
   color: #00318b;
-  font-weight: 200;
+  font-weight: 600;
   display: flex;
   flex-direction: column;
-  gap: 4px;         /* Espaçamento entre as linhas de texto */
+  gap: 6px;         
+  z-index: 2;
 }
 
-.pokemon_info p {
-  margin: 0;
-}
-
+/* Nome e Número abaixo do visor principal */
 .pokemon__data {
   position: absolute;
-  font-weight: 300;
+  font-weight: 600;
   color: #3e6aacc9;
   top: 54.5%;
-  left: 100%;
-    font-size: clamp(14px, 4vw, 22px); /* Correção do tamanho da fonte */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(14px, 4vw, 22px);
+  width: 70%;
 }
 
 .pokemon__name {
