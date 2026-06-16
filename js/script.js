@@ -12,7 +12,7 @@ const buttonPrev = document.querySelector('.btn-prev');
 const buttonNext = document.querySelector('.btn-next');
 
 let searchPokemon = 1;
-/* add fetch */
+/* add fetch, awit*/
 const fetchPokemon = async (pokemon) => {
   try {
     const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
