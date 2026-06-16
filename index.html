@@ -5,12 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Links -->
   <link rel="icon" href="./img/pokebola.webp">
   <link rel="stylesheet" href="./css/style.css">
-
-  <!-- Main JS -->
-
 
   <title>Pokédex</title>
 </head>
@@ -18,6 +14,7 @@
 <body>
 
   <main>
+
     <img src="#" alt="pokemon" class="pokemon__image">
 
     <h1 class="pokemon__data">
@@ -36,8 +33,8 @@
     </form>
 
     <div class="buttons">
-      <button class="button btn-prev">Prev &lt;</button>
-      <button class="button btn-next">Next &gt;</button>
+      <button type="button" class="button btn-prev">Prev &lt;</button>
+      <button type="button" class="button btn-next">Next &gt;</button>
     </div>
 
     <img src="./img/pokedexm.png" alt="pokedex" class="pokedex">
@@ -45,66 +42,102 @@
   </main>
 
   <script>
-    
-const pokemonName = document.querySelector('.pokemon__name');
-const pokemonNumber = document.querySelector('.pokemon__number');
-const pokemonImage = document.querySelector('.pokemon__image');
 
-const form = document.querySelector('.form');
-const input = document.querySelector('.input__search');
-const buttonPrev = document.querySelector('.btn-prev');
-const buttonNext = document.querySelector('.btn-next');
+    const pokemonName = document.querySelector('.pokemon__name');
+    const pokemonNumber = document.querySelector('.pokemon__number');
+    const pokemonImage = document.querySelector('.pokemon__image');
 
-let searchPokemon = 1;
+    const pokemonTypes = document.querySelector('.pokemon_types');
+    const pokemonHeight = document.querySelector('.pokemon_height');
+    const pokemonWeight = document.querySelector('.pokemon_weight');
 
-const fetchPokemon = async (pokemon) => {
-  const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+    const form = document.querySelector('.form');
+    const input = document.querySelector('.input__search');
+    const buttonPrev = document.querySelector('.btn-prev');
+    const buttonNext = document.querySelector('.btn-next');
 
-  if (APIResponse.status === 200) {
-    const data = await APIResponse.json();
-    return data;
-  }
-}
+    let searchPokemon = 1;
 
-const renderPokemon = async (pokemon) => {
+    const fetchPokemon = async (pokemon) => {
+      try {
+        const APIResponse = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${pokemon}`
+        );
 
-  pokemonName.innerHTML = 'Loading...';
-  pokemonNumber.innerHTML = '';
+        if (!APIResponse.ok) {
+          return null;
+        }
 
-  const data = await fetchPokemon(pokemon);
+        return await APIResponse.json();
 
-  if (data) {
-    pokemonImage.style.display = 'block';
-    pokemonName.innerHTML = data.name;
-    pokemonNumber.innerHTML = data.id;
-    pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
-    input.value = '';
-    searchPokemon = data.id;
-  } else {
-    pokemonImage.style.display = 'none';
-    pokemonName.innerHTML = 'Not found :c';
-    pokemonNumber.innerHTML = '';
-  }
-}
+      } catch (error) {
+        return null;
+      }
+    };
 
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-  renderPokemon(input.value.toLowerCase());
-});
+    const renderPokemon = async (pokemon) => {
 
-buttonPrev.addEventListener('click', () => {
-  if (searchPokemon > 1) {
-    searchPokemon -= 1;
+      pokemonName.innerHTML = 'Loading...';
+      pokemonNumber.innerHTML = '';
+
+      const data = await fetchPokemon(pokemon);
+
+      if (data) {
+
+        pokemonImage.style.display = 'block';
+
+        pokemonName.innerHTML =
+          data.name.charAt(0).toUpperCase() + data.name.slice(1);
+
+        pokemonNumber.innerHTML = data.id;
+
+        pokemonImage.src =
+          data.sprites.versions['generation-v']['black-white']
+            .animated.front_default ||
+          data.sprites.front_default;
+
+        pokemonTypes.innerHTML = data.types
+          .map(type => type.type.name)
+          .join(', ');
+
+        pokemonHeight.innerHTML = data.height;
+        pokemonWeight.innerHTML = data.weight;
+
+        input.value = '';
+        searchPokemon = data.id;
+
+      } else {
+
+        pokemonImage.style.display = 'none';
+
+        pokemonName.innerHTML = 'Not found :c';
+        pokemonNumber.innerHTML = '';
+
+        pokemonTypes.innerHTML = '';
+        pokemonHeight.innerHTML = '';
+        pokemonWeight.innerHTML = '';
+      }
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      renderPokemon(input.value.toLowerCase());
+    });
+
+    buttonPrev.addEventListener('click', () => {
+      if (searchPokemon > 1) {
+        searchPokemon--;
+        renderPokemon(searchPokemon);
+      }
+    });
+
+    buttonNext.addEventListener('click', () => {
+      searchPokemon++;
+      renderPokemon(searchPokemon);
+    });
+
     renderPokemon(searchPokemon);
-  }
-});
 
-buttonNext.addEventListener('click', () => {
-  searchPokemon += 1;
-  renderPokemon(searchPokemon);
-});
-
-renderPokemon(searchPokemon);
   </script>
 
 </body>
