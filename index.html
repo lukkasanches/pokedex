@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Links -->
-  <link rel="icon" href="./img/pokebola.webp">
+  <link rel="icon" href="./pokebola.webp">
   <link rel="stylesheet" href="./css/style.css">
-
-  <!-- Main JS -->
-
 
   <title>Pokédex</title>
 </head>
-
 <body>
-
+  
   <main>
     <img src="#" alt="pokemon" class="pokemon__image">
 
@@ -25,14 +20,13 @@
       <span class="pokemon__name"></span>
     </h1>
 
-    <div class="pokemon_info">
-      <p><strong>Tipo:</strong> <span class="pokemon_types"></span></p>
-      <p><strong>Altura:</strong> <span class="pokemon_height"></span></p>
-      <p><strong>Peso:</strong> <span class="pokemon_weight"></span></p>
-    </div>
-
     <form class="form">
-      <input type="search" class="input__search" placeholder="Nome ou número!" required />
+      <input
+        type="search"
+        class="input__search"
+        placeholder="Name or Number"
+        required
+      />
     </form>
 
     <div class="buttons">
@@ -40,69 +34,70 @@
       <button class="button btn-next">Next &gt;</button>
     </div>
 
-    <img src="./img/pokedexm.png" alt="pokedex" class="pokedex">
-
+    <img src="./pokedexm.png" alt="pokedex" class="pokedex">
   </main>
 
   <script>
-    
-async function buscarPokemon() {
+    const pokemonName = document.querySelector('.pokemon__name');
+const pokemonNumber = document.querySelector('.pokemon__number');
+const pokemonImage = document.querySelector('.pokemon__image');
 
-    const nomePokemon = document
-        .getElementById("pokemonInput")
-        .value
-        .toLowerCase()
-        .trim();
+const form = document.querySelector('.form');
+const input = document.querySelector('.input__search');
+const buttonPrev = document.querySelector('.btn-prev');
+const buttonNext = document.querySelector('.btn-next');
 
-    const resultado = document.getElementById("resultado");
+let searchPokemon = 1;
 
-    if (!nomePokemon) {
-        resultado.innerHTML = "<p>Digite o nome de um Pokémon.</p>";
-        return;
-    }
+const fetchPokemon = async (pokemon) => {
+  const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
 
-    try {
-
-        const response = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${nomePokemon}`
-        );
-
-        if (!response.ok) {
-            throw new Error("Pokémon não encontrado");
-        }
-
-        const pokemon = await response.json();
-
-        resultado.innerHTML = `
-            <h2>${pokemon.name.toUpperCase()}</h2>
-
-            <img 
-                src="${pokemon.sprites.front_default}" 
-                alt="${pokemon.name}"
-            >
-
-            <p><strong>Tipo:</strong> ${
-                pokemon.types.map(tipo => tipo.type.name).join(", ")
-            }</p>
-
-            <p><strong>Altura:</strong> ${pokemon.height}</p>
-
-            <p><strong>Peso:</strong> ${pokemon.weight}</p>
-        `;
-
-    } catch (erro) {
-
-        resultado.innerHTML = `
-            <p style="color:red;">
-                Pokémon não encontrado!
-            </p>
-        `;
-
-        console.error(erro);
-    }
+  if (APIResponse.status === 200) {
+    const data = await APIResponse.json();
+    return data;
+  }
 }
+
+const renderPokemon = async (pokemon) => {
+
+  pokemonName.innerHTML = 'Loading...';
+  pokemonNumber.innerHTML = '';
+
+  const data = await fetchPokemon(pokemon);
+
+  if (data) {
+    pokemonImage.style.display = 'block';
+    pokemonName.innerHTML = data.name;
+    pokemonNumber.innerHTML = data.id;
+    pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
+    input.value = '';
+    searchPokemon = data.id;
+  } else {
+    pokemonImage.style.display = 'none';
+    pokemonName.innerHTML = 'Not found :c';
+    pokemonNumber.innerHTML = '';
+  }
+}
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  renderPokemon(input.value.toLowerCase());
+});
+
+buttonPrev.addEventListener('click', () => {
+  if (searchPokemon > 1) {
+    searchPokemon -= 1;
+    renderPokemon(searchPokemon);
+  }
+});
+
+buttonNext.addEventListener('click', () => {
+  searchPokemon += 1;
+  renderPokemon(searchPokemon);
+});
+
+renderPokemon(searchPokemon);
   </script>
 
 </body>
-
 </html>
